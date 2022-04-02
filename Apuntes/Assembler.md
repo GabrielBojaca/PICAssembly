@@ -2,7 +2,7 @@
 Ensamblador es un lenguaje basado en abreviaturas. Toma cada instrucción y mediante el uso de Mnemónico (Palabra que representa un codigo de operación) las representa en un lenguaje compresible por el ser humano. 
 ## Ejemplo:
 
-```
+```nasm
 aux1 equ 0h  ;Creamos una variable en la posicion de memoria 0h 
 clrf aux1  ;Limpiamos la memoria en 0h
 ```
@@ -53,7 +53,7 @@ El uso de **w** significa que el resultado irá al registro **w**
 
  `movlw` -> `mov`**l**`w` 
 #### Ejemplos:
-```
+```nasm
 movlw .5
 movlw ' @' 
 movlw 0x25 
@@ -71,7 +71,7 @@ Un **ciclo de bus** son **4 ciclos de reloj**.
 ### Operaciones de un ciclo de bus
 
 Toda operacion aritmética, logíca, de movimiento o de control donde un operando sea **WREG**, siempre y cuando no sea una operacion de salto, utilizarà un solo ciclo de bus para su ejecución.
-```
+```nasm
 nop 
 movlw 
 negf 
@@ -82,7 +82,7 @@ movf
 
 Si la operacion maneja dos operandos, o su unico operando es mayor a 8 bits la operacion durará 2 ciclos de bus. Las operaciones de **salto incondicional** tambien necesitarán 2 ciclos de bus para ser ejecutadas.
 
-```
+```nasm
 movff  
 lfsr
 call
@@ -96,7 +96,7 @@ El salto condicional puede variar sus ciclos de bus, ya que debe comprobar si la
 #### Ejemplo 1 o 2 ciclos de bus
 
 Si se cumple la condición z, deberá saltar calculando un salto relativo (Necesita saber cuantas lineas debe saltar para llegar a **Menu**), usando 2 ciclos de bus. Caso contrario, usará solo 1. 
-```
+```nasm
 bz Menu  ;Salta si el bit z es 1
 clrf
 ************
@@ -118,7 +118,7 @@ La interacciòn entre *ROM RAM y CPU* varia de acuerdo a la instrucción que uti
 ### Modo inherente
 Cuando la instrucción no tiene operandos, por lo tanto no se utiliza ninguna variable. **Solo usan un ciclo de bus**
 
-```
+```nasm
 nop     0000 0000 0000 0000
 clrwdt  0000 0000 0000 0100
 sleep   0000 0000 0000 0011
@@ -128,7 +128,7 @@ daw     0000 0000 0000 0111
 
 ### Modo inmediato
 Cuando se usan constantes, la constante está en la misma instrucción
-```
+```nasm
 movlw .7	;0000 1110 kkkk kkkk
             ;0000 1110 0000 0111
 movlb 0xC	;0000 0001 0000 kkkk
@@ -137,7 +137,7 @@ movlb 0xC	;0000 0001 0000 kkkk
 ### Modo directo
 
 Cuando se utilizan variables o registros, por lo que debe especificarse la posición de memoria. 
-```
+```nasm
 aux1 equ 2h
 ***************
     movwf aux1    ;0110 111a ffff ffff 
@@ -151,7 +151,7 @@ Si se cumple una condicion se realiza un salto, modificando el contador de progr
 
     El contador de programa siempre debe ser modificado con numeros pares
 
-```
+```nasm
 (0x02) bc Siguiente ;1110 0010 nnnn nnnn 
                     ;1110 0010 0000 0010
 *************
@@ -163,7 +163,7 @@ Siguiente
 
 Cuando se salta a cualquier etiqueta de codigo, instrucciones que necesitan 32bits 
 
-```
+```nasm
 call Retardo ;1110 110s kkkk kkkk
               ;1111 kkkk kkkk kkkk 
 ; Usando la posicion de retardo divido en 2
@@ -176,7 +176,7 @@ call Retardo ;1110 110s kkkk kkkk
 
 Usando apuntadores **FSRx** (0,1,2)
 
-```
+```nasm
 aux1 equ 4h
 ***************
 Menu
@@ -198,7 +198,7 @@ Se pueden incluir librerias administrando adecuadamente la ubicacion de las inst
 
 Parametros internos del microcontrolador, como el perro guardian, protección contra escritura/lectura, etc.
 
-```
+```nasm
 config FOSC=INTOSC_EC
 config WDT=OFF
 config MCLRE=OFF
@@ -228,7 +228,7 @@ Las instrucciones siguen una estructura ordenada, la cual sigue la siguiente for
 
 ### Ejemplo:
 
-```
+```nasm
 Inicio  ;Etiqueta
     clrf TRISD ; Mnemonico, Operando, comentario
 ```
@@ -455,7 +455,7 @@ Para retornar el valor que deseamos usaremos la instrucción **RETLW** la cual c
 Cada vez que ejecutamos una operación se ejecuta una suma a **PC** de la siguiente manera **PC<-PC+2**. Si ejecutamos la instrucción <code>addwf PCL,f</code> estaremos realizando la instrucción **PC<-PC+2+W**
 
 ### Llamando una tabla de constantes
-```assembly
+```nasm
 indice equ 0h
 Menu
     ***************
