@@ -37,3 +37,34 @@ Existe un conjunto de 3 registros por puerto, los cuales se utilizan para la con
     - 1 = entrada
 - **LATx**: Establece el valor de la salida, **Empiezan indeterminados despues de un reset**.
 - **PORx**: Nos permite leer el estado actual del pin, especificamente para entradas. 
+
+
+### Mascara de entrada
+Cuando queremos consultar el valor de un registro usualmente leemos el registro PORTx. Sin embargo, los bits del registro PORTx tambien cuentan con la informació de las salidas, por lo que el valor obtenido al consultar el registro se ve contaminado con el valor de las salidas. Para esto podemos utilziar una **Mascara de entrada** la cual nos permite leer la información relevante del registro PORTx.
+
+```nasm
+Inicio
+    movlw b'01110001'
+    movwf TRISD
+    bsf LATD,7
+Menu
+    movf PORTD,w
+    andlw b'01110001' ;Mascara de entrada
+```
+
+La mascara de entrada '01110001' realiza una operación **and** con el valor de PORTD y almacena el resultado en **w**. Obsevese que al usar **and** el resultado obtenido solo tendra el cuenta los valores del registro cuya máscara sea *1*. 
+
+### Mascara de salida
+Si queremos aplicar un valor de salida a un registro debemos seleccionar adecuadametne que valor aplicarle. Si no tenemos en cuenta el estado actual del puerto de salida, estariamos sobrescribiendo valores en el registro, dañando la finalidad del programa. Para esto utilizamos una mascara de salida.
+```nasm
+Inicio
+    clrf TRISD ;Todos son salidas
+    bsf LATD,7 ;Encendemos el bit RD7
+    movlw .6 ;Cargamos el valor '00000110'
+    movwf aux1
+Menu
+    movf PORTD,w ;Leemos el estado de salida del puerto ('10000000')
+    andlw b'11110000' ;Aplicamos una mascara de entrada, despreciando los primeros 4 bits
+    iorwf aux1,w    ;Inyectamos el dato que queremos sin borrar RD7 ('1000000' -> '10000110')
+    movwf LATD    ;Cargamos el valor final en LATD
+```
