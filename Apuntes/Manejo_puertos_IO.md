@@ -68,3 +68,21 @@ Menu
     iorwf aux1,w    ;Inyectamos el dato que queremos sin borrar RD7 ('1000000' -> '10000110')
     movwf LATD    ;Cargamos el valor final en LATD
 ```
+
+### Ejemplos de lectura - escritura de puertos 
+
+Consultar si RB0 está en 0
+```nasm
+btfss    PORTB,0    ;If RB0=1, skip
+goto    Subrutuna1
+```
+Consultar si RC0 está en 1
+```nasm
+btfc    PORTC,0
+goto    Subrutina1
+```
+Leer todo el puerto D y guardar en una variable
+```nasm
+movf PORTD,W
+movwf miVar
+```
