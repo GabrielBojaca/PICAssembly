@@ -1,3 +1,29 @@
+
+# Interrupción externa
+
+```nasm
+ORG 0x0
+    goto Inicio
+ORG 0x8
+    goto ISR
+Inicio
+    bsf    INTCON2,6
+    bcf    INTCON,1
+    bsf    INTCON,4
+    bsf    INTCON,7
+Menu
+*********************
+
+*********************
+ISR
+    btfsc    INTCON,1
+    goto    ISR_INT0
+ISR_INT0
+    bcf    INTCON,1
+    bsf    LATD,0
+    retfie
+```
+
 # Resets
 
 Reset
