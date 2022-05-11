@@ -1,6 +1,22 @@
 
 # Interrupción externa
 
+Toda interrupción debe ser implementada mediante una serie de pasos:
+1. Configurar el periférico o los periféricos.
+2. Seleccionar la prioridad si se requiere.
+3. Asegurarse que la bandera empiece en cero.
+4. Habilitar individualmente la interrupción.
+5. Habilitar el grupo de interrupciones si se requiere.
+6. Habilitar globalmente las interrupciones.
+
+Los PIC18 tienen 2 niveles de prioridad, por lo tanto va a tener dos vectores de interrupción. Cuando se tienen multiples fuentes de interrupción, se hace importante poder diferenciar cual es el origen especifico de la interrupción, para que sea atendida oportunamente. Este algoritmo de detección de fuente de interrupción se llama algoritmo de "polling", en el se analizan los bits de bandera de cada interrupción, buscando encontrar cual fué la que ocurrió, para ejecutar su respectiva subrutina. Una vez se ingresa en la rutina de la interrupción, se debe borrar la bandera de interrupción e implementar el código ISR correspondiente. Al final de las interrupciones se debe retornar al punto del programa donde estaba el codigo.
+
+1. Ubicar el vector de interrupción correspondiente según prioridad.
+2. Implementar un algoritmo de "polling".
+3. Borrar la bandera de interrupción.
+4. Implementar el código de la IST como tal. 
+5. Retornar de la interrupción según la sintaxis del lenguaje usado. 
+
 ```nasm
 ORG 0x0
     goto Inicio
